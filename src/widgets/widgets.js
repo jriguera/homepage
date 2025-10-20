@@ -1,4 +1,5 @@
 import adguard from "./adguard/widget";
+import amule from "./amule/widget";
 import apcups from "./apcups/widget";
 import argocd from "./argocd/widget";
 import atsumeru from "./atsumeru/widget";
@@ -145,6 +146,7 @@ import zabbix from "./zabbix/widget";
 
 const widgets = {
   adguard,
+  amule,
   apcups,
   argocd,
   atsumeru,

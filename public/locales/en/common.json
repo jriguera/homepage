@@ -97,6 +97,12 @@
         "up": "Up",
         "not_available": "Not Available"
     },
+    "amule": {
+        "download": "Download",
+        "upload": "Upload",
+        "downloading": "Downloading",
+        "queue": "Queue"
+    },
     "emby": {
         "playing": "Playing",
         "transcoding": "Transcoding",
