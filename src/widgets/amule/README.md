@@ -11,14 +11,16 @@ src/widgets/amule/
 └── proxy.js         # API proxy handler
 ```
 
-This widget integrates with aMule, a multi-platformThe widget uses the `amule-js` library which implements aMule's External Connections (EC) protocol. It:
+This widget integrates with aMule, a multi-platform P2P client, using the
+[amule-ec-node](https://github.com/got3nks/amule-ec-node) library to communicate
+directly with aMule's External Connections (EC) protocol. It:
 
 1. Establishes a TCP connection to aMule's EC port (default 4712)
 2. Parses the `server` parameter (format: `hostname:port` or `ip:port`)
-3. Authenticates using MD5-hashed password
+3. Authenticates using the EC password (hashing handled by the library)
 4. Fetches statistics using EC protocol commands:
-   - `getStatistiques()` - Gets download/upload speeds
-   - `getDetailUpdate()` - Gets detailed file list and statuske client, using the [amule-js](https://github.com/tbo47/amule-js) library to communicate directly with aMule's External Connections (EC) protocol.
+   - `getStats()` - Gets download/upload speeds
+   - `getDownloadQueue()` - Gets the detailed download file list and status
 
 ## Configuration
 
@@ -46,13 +48,13 @@ Add the following configuration to your `services.yaml`:
 From the homepage project root:
 
 ```bash
-npm install amule-js blueimp-md5
+npm install github:got3nks/amule-ec-node
 ```
 
 Or if using pnpm:
 
 ```bash
-pnpm add amule-js blueimp-md5
+pnpm add github:got3nks/amule-ec-node
 ```
 
 ### 2. Configure aMule
@@ -92,16 +94,16 @@ The widget displays the following information:
 
 ### 1. Install Required npm Packages
 
-You need to install the `amule-js` library and its dependency:
+You need to install the `amule-ec-node` library:
 
 ```bash
-npm install amule-js blueimp-md5
+npm install github:got3nks/amule-ec-node
 ```
 
 Or with pnpm:
 
 ```bash
-pnpm add amule-js blueimp-md5
+pnpm add github:got3nks/amule-ec-node
 ```
 
 ### 2. Enable aMule External Connections
@@ -121,15 +123,15 @@ Make sure your Homepage instance can reach aMule's EC port:
 
 ## API Integration
 
-This widget uses the `amule-js` library which implements aMule's External Connections (EC) protocol. It:
+This widget uses the `amule-ec-node` library which implements aMule's External Connections (EC) protocol. It:
 
 1. Establishes a TCP connection to aMule's EC port (default 4712)
-2. Authenticates using MD5-hashed password
+2. Authenticates using the EC password (hashing handled by the library)
 3. Fetches statistics using EC protocol commands:
-   - `getStatistiques()` - Gets download/upload speeds
-   - `getDetailUpdate()` - Gets detailed file list and status
+   - `getStats()` - Gets download/upload speeds
+   - `getDownloadQueue()` - Gets the detailed download file list and status
 
-The connection is cached and reused across requests for better performance.
+A fresh connection is opened per request and closed afterwards to avoid leaking sockets.
 
 ## Technical Details
 
@@ -141,15 +143,15 @@ The `server` parameter accepts:
 
 ### Data Extraction
 
-- **Download/Upload Speeds**: Retrieved from `EC_TAG_STATS_DL_SPEED` (513) and `EC_TAG_STATS_UL_SPEED` (512) via `getStatistiques()`
-- **File Counts**: Calculated from the download queue using `getDownloads()`:
-  - **Downloading**: Files with `partfile_speed > 0` (actively transferring)
-  - **Queue**: Files with `partfile_speed === 0` (paused or waiting)
+- **Download/Upload Speeds**: Retrieved from the `EC_TAG_STATS_DL_SPEED` and `EC_TAG_STATS_UL_SPEED` fields (bytes/s) returned by `getStats()`
+- **File Counts**: Calculated from the download queue using `getDownloadQueue()`:
+  - **Downloading**: Files with `speed > 0` (actively transferring)
+  - **Queue**: Files with `speed === 0` (paused or waiting)
 
 ### Error Handling
 
 - Missing password returns a 400 error
-- Connection failures remove the client from cache and return 500 error
+- Connection failures return a 500 error
 - All errors are logged for debugging
 
 ## Troubleshooting
@@ -164,23 +166,23 @@ The `server` parameter accepts:
 - Make sure you've added the `password` field to your widget configuration
 
 ### Incorrect File Counts
-- The widget uses `partfile_speed` to determine if a file is actively downloading
+- The widget uses each download's `speed` to determine if a file is actively downloading
 - Files with speed > 0 are counted as "downloading"
 - Files with speed = 0 are counted as "queue" (paused/waiting)
 - If counts seem wrong, check if files are actually transferring data in aMule
 
 ## aMule Integration Details
 
-The widget uses the **amule-js** library (https://github.com/tbo47/amule-js) which:
+The widget uses the **amule-ec-node** library (https://github.com/got3nks/amule-ec-node) which:
 
 - Connects directly to aMule's External Connections (EC) protocol via TCP
 - Default EC port: 4712 (not the web interface port 4711)
-- Authentication: MD5-hashed password
+- Authentication: EC password (salted/hashed by the library)
 - Protocol: Custom binary protocol (not HTTP/REST)
 
 ## Related Resources
 
 - [aMule Official Site](http://www.amule.org/)
-- [amule-js GitHub](https://github.com/tbo47/amule-js)
+- [amule-ec-node GitHub](https://github.com/got3nks/amule-ec-node)
 - [Homepage Dashboard](https://gethomepage.dev/)
 - [aMule EC Protocol](http://wiki.amule.org/wiki/External_Connections)

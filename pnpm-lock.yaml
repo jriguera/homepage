@@ -14,6 +14,9 @@ importers:
       '@kubernetes/client-node':
         specifier: ^1.0.0
         version: 1.0.0
+      amule-ec-node:
+        specifier: github:got3nks/amule-ec-node
+        version: https://codeload.github.com/got3nks/amule-ec-node/tar.gz/c161a80ff5427df200505961193640632a583bbf
       classnames:
         specifier: ^2.5.1
         version: 2.5.1
@@ -1458,6 +1461,10 @@ packages:
 
   ajv@6.14.0:
     resolution: {integrity: sha512-IWrosm/yrn43eiKqkfkHis7QioDleaXQHdDVPKg0FSwwd/DuvyX79TZnFOnYpB7dcsFAMmtFztZuXPDvSePkFw==}
+
+  amule-ec-node@https://codeload.github.com/got3nks/amule-ec-node/tar.gz/c161a80ff5427df200505961193640632a583bbf:
+    resolution: {gitHosted: true, integrity: sha512-lGL70h7qLhY4tS8sm3AIRSJ210gD6rp43+dPyxNKsWwzPhXPnILXSWyYLkbkGqnLGZr4x6GrGOtist0aEPIb2Q==, tarball: https://codeload.github.com/got3nks/amule-ec-node/tar.gz/c161a80ff5427df200505961193640632a583bbf}
+    version: 1.1.0
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -4982,6 +4989,8 @@ snapshots:
       fast-json-stable-stringify: 2.1.0
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
+
+  amule-ec-node@https://codeload.github.com/got3nks/amule-ec-node/tar.gz/c161a80ff5427df200505961193640632a583bbf: {}
 
   ansi-regex@5.0.1: {}
 

@@ -46,8 +46,7 @@
     "winston": "^3.19.0",
     "ws": "^8.21.0",
     "xml-js": "^1.6.11",
-    "amule-js": "^1.0.0",
-    "blueimp-md5": "^2.19.0"
+    "amule-ec-node": "github:got3nks/amule-ec-node"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.3",
