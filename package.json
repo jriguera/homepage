@@ -45,7 +45,7 @@
     "urbackup-server-api": "^0.92.2",
     "winston": "^3.19.0",
     "ws": "^8.21.0",
-    "xml-js": "^1.6.11"
+    "xml-js": "^1.6.11",
     "amule-js": "^1.0.0",
     "blueimp-md5": "^2.19.0"
   },
