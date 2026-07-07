@@ -1,5 +1,5 @@
 import ErrorBoundary from "components/errorboundry";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next/pages";
 
 import components from "widgets/components";
 
@@ -8,8 +8,7 @@ export default function Widget({ widget, service }) {
 
   const ServiceWidget = components[widget.type];
 
-  const fullService = Object.apply({}, service);
-  fullService.widget = widget;
+  const fullService = { ...service, widget };
   if (ServiceWidget) {
     return (
       <ErrorBoundary>

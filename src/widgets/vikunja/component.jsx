@@ -1,6 +1,6 @@
 import Block from "components/services/widget/block";
 import Container from "components/services/widget/container";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next/pages";
 
 import useWidgetAPI from "utils/proxy/use-widget-api";
 
@@ -8,11 +8,15 @@ export default function Component({ service }) {
   const { t } = useTranslation();
   const { widget } = service;
 
+  const version = widget.version ?? 1;
+
   const { data: projectsData, error: projectsError } = useWidgetAPI(widget, "projects");
-  const { data: tasksData, error: tasksError } = useWidgetAPI(widget, "tasks");
+  const { data: tasksData, error: tasksError } = useWidgetAPI(widget, version === 2 ? "tasks_v2" : "tasks");
 
   if (projectsError || tasksError) {
     return <Container service={service} error={projectsError ?? tasksError} />;
+  } else if (projectsData?.message || tasksData?.message) {
+    return <Container service={service} error={projectsData?.message ?? tasksData?.message} />;
   }
 
   if (!projectsData || !tasksData) {

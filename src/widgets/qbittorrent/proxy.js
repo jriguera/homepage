@@ -9,13 +9,18 @@ async function login(widget) {
   logger.debug("qBittorrent is rejecting the request, logging in.");
   const loginUrl = new URL(`${widget.url}/api/v2/auth/login`).toString();
   const loginBody = `username=${encodeURIComponent(widget.username)}&password=${encodeURIComponent(widget.password)}`;
+  const loginKey = `${widget.key}`;
   const loginParams = {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: loginBody,
   };
 
-  // eslint-disable-next-line no-unused-vars
+  if (widget.key) {
+    loginParams.headers.Authorization = `Bearer ${loginKey}`;
+  } else if (widget.username && widget.password) {
+    loginParams.body = loginBody;
+  }
+
   const [status, contentType, data] = await httpProxy(loginUrl, loginParams);
   return [status, data];
 }
@@ -42,12 +47,12 @@ export default async function qbittorrentProxyHandler(req, res) {
   if (status === 403) {
     [status, data] = await login(widget);
 
-    if (status !== 200) {
+    if (![200, 204].includes(status)) {
       logger.error("HTTP %d logging in to qBittorrent.  Data: %s", status, data);
       return res.status(status).end(data);
     }
 
-    if (data.toString() !== "Ok.") {
+    if (status === 200 && data.toString() !== "Ok.") {
       logger.error("Error logging in to qBittorrent: Data: %s", data);
       return res.status(401).end(data);
     }

@@ -1,6 +1,6 @@
 import Block from "components/services/widget/block";
 import Container from "components/services/widget/container";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next/pages";
 
 import useWidgetAPI from "utils/proxy/use-widget-api";
 
@@ -47,8 +47,13 @@ export default function Component({ service }) {
       );
       break;
     case 2:
-      loginsLast24H = loginsData[0]?.count || 0;
-      failedLoginsLast24H = failedLoginsData[0]?.count || 0;
+      loginsLast24H =
+        loginsData.reduce?.(
+          (total, current) => (current?.count && current?.action === "login" ? total + current.count : total),
+          0,
+        ) || 0;
+      failedLoginsLast24H =
+        failedLoginsData.reduce?.((total, current) => (current?.count ? total + current.count : total), 0) || 0;
       break;
   }
 

@@ -101,6 +101,25 @@ Each service can have multiple widgets attached to it, for example:
 
       Multiple widgets per service are not yet supported with Kubernetes ingress annotations.
 
+#### Custom HTTP headers
+
+Widgets that make HTTP calls support extra request headers via `headers`. This is useful when a reverse proxy expects a secret header.
+
+```yaml
+- UptimeRobot:
+    icon: uptimekuma.png
+    href: https://uptimerobot.com/
+    widget:
+      type: uptimerobot
+      url: https://api.uptimerobot.com
+      key: ${UPTIMEROBOT_API_KEY}
+      headers:
+        User-Agent: homepage
+        X-Auth-Key: your-secret-here
+```
+
+If you define services via Docker labels or Kubernetes annotations, use the same key with dot-notation (for example `homepage.widget.headers.X-Auth-Key=secret` or `gethomepage.dev/widget.headers.X-Auth-Key: "secret"`).
+
 #### Field Visibility
 
 Each widget can optionally provide a list of which fields should be visible via the `fields` widget property. If no fields are specified, then all fields will be displayed. The `fields` property must be a valid YAML array of strings. As an example, here is the entry for Sonarr showing only a couple of fields.
@@ -159,6 +178,19 @@ Widgets can tint their metric block text automatically based on rules defined al
 
 Supported numeric operators for the `when` property are `gt`, `gte`, `lt`, `lte`, `eq`, `ne`, `between`, and `outside`. String rules support `equals`, `includes`, `startsWith`, `endsWith`, and `regex`. Each rule can be inverted with `negate: true`, and string rules may pass `caseSensitive: true` or custom regex `flags`. The highlight engine does its best to coerce formatted values, but you will get the most reliable results when you pass plain numbers or strings into `<Block>`.
 
+#### Value Only Highlighting
+
+You can optionally apply highlighting only to the value portion of a block (not the label) by setting `valueOnly: true` on the field configuration. This keeps the label visible while highlighting only the metric value itself.
+
+```yaml
+- Sonarr:
+    ...
+      highlight:
+        queued:
+          valueOnly: true
+          ...
+```
+
 ## Descriptions
 
 Services may have descriptions,
@@ -188,6 +220,8 @@ You can also specify prefixed icons from:
 - [selfh.st/icons](https://selfh.st/icons/) with `sh-XX` to use the png version or `sh-XX.svg/png/webp` for a specific version
 
 You can specify a custom color for `mdi` and `si` icons by adding a hex color code as a suffix e.g. `mdi-XX-#f0d453` or `si-XX-#a712a2`.
+
+Note that these icon sets are not bundled with Homepage, they are fetched in the browser from remote CDN servers. To use the icons offline you may download the icons and serve them locally, or rely on browser caching when applicable.
 
 To use a remote icon, use the absolute URL (e.g. `https://...`).
 

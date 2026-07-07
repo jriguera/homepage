@@ -1,6 +1,6 @@
 import Block from "components/services/widget/block";
 import Container from "components/services/widget/container";
-import { useTranslation } from "next-i18next";
+import { useTranslation } from "next-i18next/pages";
 import Pool from "widgets/truenas/pool";
 
 import useWidgetAPI from "utils/proxy/use-widget-api";
@@ -12,8 +12,8 @@ export default function Component({ service }) {
 
   const { data: alertData, error: alertError } = useWidgetAPI(widget, "alerts");
   const { data: statusData, error: statusError } = useWidgetAPI(widget, "status");
-  const { data: poolsData, error: poolsError } = useWidgetAPI(widget, widget?.enablePools ? "pools" : null);
-  const { data: datasetData, error: datasetError } = useWidgetAPI(widget, widget?.enablePools ? "dataset" : null);
+  const { data: poolsData, error: poolsError } = useWidgetAPI(widget, widget?.enablePools ? "pools" : "");
+  const { data: datasetData, error: datasetError } = useWidgetAPI(widget, widget?.enablePools ? "dataset" : "");
 
   if (alertError || statusError || poolsError) {
     const finalError = alertError ?? statusError ?? poolsError ?? datasetError;
