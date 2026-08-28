@@ -45,7 +45,8 @@
     "urbackup-server-api": "^0.92.2",
     "winston": "^3.19.0",
     "ws": "^8.21.1",
-    "xml-js": "^1.6.11"
+    "xml-js": "^1.6.11",
+    "amule-ec-node": "github:got3nks/amule-ec-node"
   },
   "devDependencies": {
     "@eslint/compat": "^2.1.0",
